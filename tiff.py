@@ -14,7 +14,6 @@ class TiffManipulations:
         self.endian = self.defEndian()
         self.isTiff = self.isTiff()
         self.offset = self.connectByte(self.data_hex_list[4: 8])
-        self.returnDE(self.offset+14)
         self.returnIFD(self.offset)
 
 
@@ -28,7 +27,7 @@ class TiffManipulations:
         for i in range(len(data_hex)):
             if i % 2 == 0 and i != 0:
                 data_hex_list.append(data_hex[i - 2:i])
-        print("data_hex_list:" + str(data_hex_list))
+        # print("data_hex_list:" + str(data_hex_list))
         return data_hex_list
 
     def defEndian(self):
@@ -58,18 +57,25 @@ class TiffManipulations:
                 connectedByte = tab[3] + tab[2] + tab[1] + tab[0]
         return int(connectedByte, 16)
 
-
     def returnIFD(self, start):
         DE = self.connectByte(self.data_hex_list[start: start + 2])
         for i in range(0, DE):
-            returnDE()
+            self.returnDE(start + 2 + i*12)
+        nextIFDoffset = start + 14 + DE*12
+        print("nextIFDoffset: " + str(nextIFDoffset))
+        if nextIFDoffset != 0:
+            self.returnIFD(nextIFDoffset)
+        print("DONE")
 
     def returnDE(self, start):
         tag = self.connectByte(self.data_hex_list[start: start+2])
         type = self.connectByte(self.data_hex_list[start+2: start+4])
         size = self.connectByte(self.data_hex_list[start+4: start+8])
-        date = self.connectByte(self.data_hex_list[start+8: start+12])
+        data = self.connectByte(self.data_hex_list[start+8: start+12])
+
         print("tag: " + str(tag))
         print("type: " + str(type))
-        print("size: " + str(tag))
-        print("date: " + str(date))
+        print("size: " + str(size))
+        print("data: " + str(data))
+
+        print("----------")
