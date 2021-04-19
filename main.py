@@ -1,16 +1,29 @@
-import tiff_manipulations as tf
-import tiff as tf2
+import cv2
+import numpy as np
+import tiff as tf
 import matplotlib.pyplot as plt
 
+####DFT
 
-image = 'kilka_pikseli.tif'
-# image = 'dupa.txt'
+img = cv2.imread('slowikus.tif',0)
+f = np.fft.fft2(img)
+fshift = np.fft.fftshift(f)
+magnitude_spectrum = 20*np.log(np.abs(fshift))
 
-tiff_file = tf2.TiffManipulations(image)
-# tiff_file.read_data()
-# list_data()
-# print(tiff_file.check_required_fields())
+plt.subplot(121),plt.imshow(img, cmap = 'gray')
+plt.title('Input Image'), plt.xticks([]), plt.yticks([])
+plt.subplot(122),plt.imshow(magnitude_spectrum, cmap = 'gray')
+plt.title('Magnitude Spectrum'), plt.xticks([]), plt.yticks([])
+plt.show()
 
-# img = plt.imread(image)
-# plt.imshow(img)
-# plt.show()
+
+
+#operacje na obrazie
+
+image = 'slowikus.tif'
+
+tiff_file = tf.Tiff(image)
+
+img = plt.imread(image)
+plt.imshow(img)
+plt.show()
