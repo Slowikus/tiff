@@ -1,6 +1,7 @@
-import sys
+
 import tags
 from shutil import copyfile
+import binascii
 
 
 class Tiff:
@@ -10,6 +11,7 @@ class Tiff:
         self.endian = self.defEndian()
         self.isTiff = self.isTiff()
         self.offset = self.connectByte(self.hexList[4: 8])
+        self.returnIFD(self.offset, self.hexList)
         self.anonimize(file_name)
 
 
@@ -53,11 +55,11 @@ class Tiff:
                 connectedByte = tab[3] + tab[2] + tab[1] + tab[0]
         return int(connectedByte, 16)
 
-    def returnDE(self, start):
-        tag = self.connectByte(self.hexList[start: start + 2])
-        type = self.connectByte(self.hexList[start + 2: start + 4])
-        size = self.connectByte(self.hexList[start + 4: start + 8])
-        data = self.connectByte(self.hexList[start + 8: start + 12])
+    def returnDE(self, start, hexList):
+        tag = self.connectByte(hexList[start: start + 2])
+        type = self.connectByte(hexList[start + 2: start + 4])
+        size = self.connectByte(hexList[start + 4: start + 8])
+        data = self.connectByte(hexList[start + 8: start + 12])
 
         print("tag: ", end='')
         for i in tags.requiredTagsStrips:
@@ -75,20 +77,19 @@ class Tiff:
 
         print("--------------")
 
-    def returnIFD(self, start):
-        amountOfDE = self.connectByte(self.hexList[start: start + 2])
-        print("Amount of TAGS:" + str(amountOfDE))
+    def returnIFD(self, start, hexList):
+        amountOfDE = self.connectByte(hexList[start: start + 2])
+        #print("Amount of TAGS:" + str(amountOfDE))
         for i in range(0, amountOfDE):
-            self.returnDE(start + 2 + i * 12)
+            self.returnDE(start + 2 + i * 12, hexList)
         sizeOfIFD = start + 2 + amountOfDE * 12
-        offsetNextIFD = self.connectByte(self.hexList[sizeOfIFD:  sizeOfIFD + 4])
+        offsetNextIFD = self.connectByte(hexList[sizeOfIFD:  sizeOfIFD + 4])
         print("offset of next IFD: " + str(offsetNextIFD))
         if offsetNextIFD == 0:
-            print("End of file")
-
+            print("End of IFD")
         else:
             print("Go to next IFD")
-            self.returnIFD(sizeOfIFD + 4)
+            self.returnIFD(sizeOfIFD + 4, hexList)
 
     # Funkcja zwracająca true jeżeli znajdzie wskazany tag oraz false jezeli nie. nie poztrebne XD
     def findTag(self, start, tag):
@@ -120,8 +121,15 @@ class Tiff:
         amountOfDE = self.connectByte(self.hexList[self.offset: self.offset + 2])
 
         if self.isTailed(self.offset) == False:
-            anonimizedHexList[positionAnonimized] = 0
-            anonimizedHexList[positionAnonimized + 1] = hex(12)
+
+            if self.endian == "big":
+                anonimizedHexList[positionAnonimized] = '00'
+                anonimizedHexList[positionAnonimized + 1] = '0c'
+            elif self.endian == "little":
+                anonimizedHexList[positionAnonimized] = '0c'
+                anonimizedHexList[positionAnonimized + 1] = '00'
+
+            print(self.connectByte(anonimizedHexList[positionAnonimized: positionAnonimized + 2]))
             positionAnonimized += 2
             for i in range(0, amountOfDE):
                 tag = self.connectByte(self.hexList[position: position + 2])
@@ -133,57 +141,43 @@ class Tiff:
                 position += 12
 
             for x in range(4):
-                anonimizedHexList[positionAnonimized + x] = '0'
+                anonimizedHexList[positionAnonimized + x] = '00'
         else:
-            anonimizedHexList[positionAnonimized] = 0
-            anonimizedHexList[positionAnonimized + 1] = hex(13)
+            if self.endian == "big":
+                anonimizedHexList[positionAnonimized] = '00'
+                anonimizedHexList[positionAnonimized + 1] = '0d'
+            elif self.endian == "little":
+                anonimizedHexList[positionAnonimized] = '0d'
+                anonimizedHexList[positionAnonimized + 1] = '00'
+
             positionAnonimized += 2
             for i in range(0, amountOfDE):
                 tag = self.connectByte(self.hexList[position: position + 2])
                 for i in tags.requiredTagsStrips:
                     if tags.requiredTagsStrips[i] == tag:
                         for x in range(12):
+
                             anonimizedHexList[positionAnonimized + x] = self.hexList[position + x]
                         positionAnonimized += 12
                 position += 12
 
             for x in range(4):
-                anonimizedHexList[positionAnonimized + x] = '0'
+                anonimizedHexList[positionAnonimized + x] = '00'
+        print("////////////////// Tagi zanonimizowanego pliku //////////////////" )
+        self.returnIFD(self.offset, anonimizedHexList)
 
-        ###################################
-        #wyswitlanie czy git
-        start = self.offset
-        amountOfDE = 12
+        #zapisywanie do pliku
+        newFile = open("anonim.tif","wb")
+        for x in range(len(anonimizedHexList)):
+            binaryList = binascii.unhexlify(anonimizedHexList[x])
+            newFileByteArray = bytearray(binaryList)
+            newFile.write(newFileByteArray)
 
-        for i in range(0, amountOfDE):
-            a= start + 2 + i * 12
-            tag = self.connectByte(self.hexList[a: a + 2])
-            type = self.connectByte(self.hexList[a + 2: a + 4])
-            size = self.connectByte(self.hexList[a + 4: a + 8])
-            data = self.connectByte(self.hexList[a + 8: a + 12])
 
-            print("tag: ", end='')
-            for i in tags.requiredTagsStrips:
-                if tags.requiredTagsStrips[i] == tag:
-                    print(str(i), end='')
-            print(" (" + str(tag) + ")")
 
-            for i in tags.dataTypes:
-                if tags.dataTypes[i] == type:
-                    print("type: " + str(i))
 
-            print("size: " + str(size))
 
-            print("data: " + str(data))
 
-            print("--------------")
 
-        sizeOfIFD = start + 2 + amountOfDE * 12
-        offsetNextIFD = self.connectByte(anonimizedHexList[sizeOfIFD:  sizeOfIFD + 4])
-
-        if offsetNextIFD != 0:
-
-            print("Go to next IFD")
-            self.returnIFD(sizeOfIFD + 4)
 
 

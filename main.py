@@ -24,9 +24,9 @@ import matplotlib.pyplot as plt
 
 
 image = 'slowikus.tif'
-image_anonimized = 'test.tif'
+image_anonimized = 'anonim.tif'
 tiff_file = tf.Tiff(image)
 
-img = plt.imread(image)
-plt.imshow(img)
-plt.show()
+# img = plt.imread(image)
+# plt.imshow(img)
+# plt.show()

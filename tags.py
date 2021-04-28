@@ -28,20 +28,6 @@ requiredTagsTailes = {
         'resolution_unit': 0x0128
 }
 
-requiredValues = {'width': 0,
-        'length': 0,
-        'bits_per_sample': 0,
-        'compression': 0,
-        'photometric_interpretation': 0,
-        'strip_offsets': 0,
-        'samples_per_pixel': 0,
-        'rows_per_strip': 0,
-        'strip_byte_counts': 0,
-        'x_resolution': 0,
-        'y_resolution': 0,
-        'resolution_unit': 0}
-
-
 dataTypes = {
         'BYTE': 0x0001,
         'ASCII': 0x0002,
@@ -58,6 +44,4 @@ dataTypes = {
 }
 
 
-moreTags = {
 
-        }
