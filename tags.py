@@ -43,5 +43,10 @@ dataTypes = {
         'DOUBLE': 0x000C
 }
 
+exifTags = {
+        'exif_IFD': 0x8769,
+        'GPS_info': 0x8825,
+        'interoperability_IFD': 0xA005,
+}
 
 

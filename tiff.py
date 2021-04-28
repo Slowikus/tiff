@@ -77,6 +77,11 @@ class Tiff:
 
         print("--------------")
 
+        for i in tags.exifTags:
+            if tags.exifTags[i] == tag:
+                print("--Znaleziono nowy IFD: " + str(i) + " --")
+                self.returnIFD(data, self.hexList)
+
     def returnIFD(self, start, hexList):
         amountOfDE = self.connectByte(hexList[start: start + 2])
         #print("Amount of TAGS:" + str(amountOfDE))
@@ -114,8 +119,7 @@ class Tiff:
 
     # Funkcja tworząca zanonimizowana kopię obrazu
     def anonimize(self, file_name):
-        copyfile(file_name, 'test.tif')
-        anonimizedHexList = self.returnHexList('test.tif')
+        anonimizedHexList = self.returnHexList(file_name)
         position = self.offset + 2
         positionAnonimized = self.offset
         amountOfDE = self.connectByte(self.hexList[self.offset: self.offset + 2])
