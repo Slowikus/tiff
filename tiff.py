@@ -1,4 +1,3 @@
-
 import tags
 import binascii
 
@@ -12,7 +11,6 @@ class Tiff:
         self.offset = self.connectByte(self.hexList[4: 8])
         self.returnIFD(self.offset, self.hexList)
        # self.anonimize(file_name)
-
 
     @staticmethod
     def returnHexList(file_name):
@@ -72,12 +70,14 @@ class Tiff:
 
         print("size: " + str(size))
 
-        print("data: " + str(data))
+        print("data: " + str(data), end='')
+        for i, j in tags.data.items():
+            if tag == i:
+                for key in j:
+                    if key == data:
+                        print(" " + "(" + str(tags.data[tag][key]) + ")", end='')
 
-        # if hex(tag) in data:
-        #     print(data[hex(tag)].get(str(data)))
-
-        print("--------------")
+        print("\n--------------")
 
         for i in tags.exifTags:
             if tags.exifTags[i] == tag:
@@ -178,12 +178,4 @@ class Tiff:
             binaryList = binascii.unhexlify(anonimizedHexList[x])
             newFileByteArray = bytearray(binaryList)
             newFile.write(newFileByteArray)
-
-
-
-
-
-
-
-
 
