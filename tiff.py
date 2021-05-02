@@ -1,6 +1,5 @@
 
 import tags
-from shutil import copyfile
 import binascii
 
 
@@ -12,7 +11,7 @@ class Tiff:
         self.isTiff = self.isTiff()
         self.offset = self.connectByte(self.hexList[4: 8])
         self.returnIFD(self.offset, self.hexList)
-        self.anonimize(file_name)
+       # self.anonimize(file_name)
 
 
     @staticmethod
@@ -74,6 +73,9 @@ class Tiff:
         print("size: " + str(size))
 
         print("data: " + str(data))
+
+        # if hex(tag) in data:
+        #     print(data[hex(tag)].get(str(data)))
 
         print("--------------")
 
