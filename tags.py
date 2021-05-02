@@ -1,8 +1,6 @@
-data = {
-        0x0103: {'1': 'no_compression', '2': 'CCITT', '32773': 'PackBits'},
-        0x0106: {'0': 'WhiteIsZero', '1': 'BlackIsZero'}
-
-}
+data = {0x0103: {1: 'no_compression', 2: 'CCITT', 32773: 'PackBits'},
+        0x0106: {0: 'WhiteIsZero', 1: 'BlackIsZero', 2: 'RGB', 3: 'PaletteColor'},
+        0x0128: {1: 'NoAbsoluteUnit', 2: 'Inch', 3: 'Centimeter'}}
 
 
 
