@@ -10,7 +10,7 @@ class Tiff:
         self.isTiff = self.isTiff()
         self.offset = self.connectByte(self.hexList[4: 8])
         self.returnIFD(self.offset, self.hexList)
-       # self.anonimize(file_name)
+        self.anonimize(file_name)
 
     @staticmethod
     def returnHexList(file_name):
@@ -59,8 +59,8 @@ class Tiff:
         data = self.connectByte(hexList[start + 8: start + 12])
 
         print("tag: ", end='')
-        for i in tags.requiredTagsStrips:
-            if tags.requiredTagsStrips[i] == tag:
+        for i in tags.tags:
+            if tags.tags[i] == tag:
                 print(str(i), end='')
         print(" (" + str(tag) + ")")
 
@@ -70,12 +70,13 @@ class Tiff:
 
         print("size: " + str(size))
 
-        print("data: " + str(data), end='')
+        print("data:", end='')
         for i, j in tags.data.items():
             if tag == i:
                 for key in j:
                     if key == data:
-                        print(" " + "(" + str(tags.data[tag][key]) + ")", end='')
+                        print(" " + str(tags.data[tag][key]) + " ", end='')
+        print("(" + str(data) + ")")
 
         print("\n--------------")
 
