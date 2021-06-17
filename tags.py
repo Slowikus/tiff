@@ -1,9 +1,8 @@
-data = {0x0103: {1: 'no_compression', 2: 'CCITT', 32773: 'PackBits'},
+data = {0x0103: {1: 'no_compression', 2: 'CCITT',5: 'LZW', 32773: 'PackBits'},
         0x0106: {0: 'WhiteIsZero', 1: 'BlackIsZero', 2: 'RGB', 3: 'PaletteColor'},
         0x0128: {1: 'NoAbsoluteUnit', 2: 'Inch', 3: 'Centimeter'},
         0x0112: {1: 'ORIENTATION_TOPLEFT', 2: 'ORIENTATION_TOPRIGHT', 3: 'ORIENTATION_BOTRIGHT', 4: 'ORIENTATION_BOTLEFT',
                  5: 'ORIENTATION_LEFTTOP', 6: 'ORIENTATION_RIGHTTOP', 7: 'ORIENTATION_RIGHTBOT', 8: 'ORIENTATION_LEFTBOT'}
-
 
         }
 
@@ -15,13 +14,47 @@ requiredTagsStrips = {
         'bits_per_sample': 0x102,
         'compression': 0x0103,
         'photometric_interpretation': 0x0106,
-        'strip_offsets': 0x111,
+        'strip_offsets': 0x0111,
         'samples_per_pixel': 0x0115,
         'rows_per_strip': 0x0116,
         'strip_byte_counts': 0x117,
         'x_resolution': 0x011A,
-        'y_resolution': 0x11B,
+        'y_resolution': 0x011B,
         'resolution_unit': 0x0128}
+
+tagsSave = {
+        'width': 0x0100,
+        'length': 0x0101,
+        'bits_per_sample': 0x102,
+        'compression': 0x0103,
+        'photometric_interpretation': 0x0106,
+        'strip_offsets': 0x0111,
+        'samples_per_pixel': 0x0115,
+        'rows_per_strip': 0x0116,
+        'strip_byte_counts': 0x117,
+        'x_resolution': 0x011A,
+        'y_resolution': 0x011B,
+        'resolution_unit': 0x0128,
+        # 'planar_configuration': 0x011C
+}
+
+tagsValues = {
+        'width': -99,
+        'length': -99,
+        'bits_per_sample': -99,
+        'compression': -99,
+        'photometric_interpretation': -99,
+        'strip_offsets': -99,
+        'samples_per_pixel': -99,
+        'rows_per_strip': -99,
+        'strip_byte_counts': -99,
+        'x_resolution': -99,
+        'y_resolution': -99,
+        'resolution_unit': -99,
+        # 'planar_configuration': 1,
+}
+
+
 
 requiredTagsTailes = {
         'width': 0x0100,
@@ -35,7 +68,7 @@ requiredTagsTailes = {
         'tile_offsets': 0x0144,
         'tile_byte_counts': 0x0145,
         'x_resolution': 0x011A,
-        'y_resolution': 0x11B,
+        'y_resolution': 0x011B,
         'resolution_unit': 0x0128
 }
 
